@@ -1,8 +1,16 @@
 package com.vamsi.FirstJob.job;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
 public class Job {
+    @Id
+    //This Generative type makes sure the id is incremented everytime when the new job is created
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
     private String description;

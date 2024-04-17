@@ -1,5 +1,8 @@
 package com.vamsi.FirstJob.job;
 
+import jdk.jshell.Snippet;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,23 +17,41 @@ public class JobController {
     }
 
     @GetMapping("/jobs")
-    public List<Job> findAll()
+    public ResponseEntity<List<Job>> findAll()
         {
-            return jobService.FindAll();
+            return ResponseEntity.ok(jobService.FindAll());
         }
     @PostMapping("/jobs")
-    public String CreateJob(@RequestBody Job job)
+    public ResponseEntity<String> CreateJob(@RequestBody Job job)
     {
         jobService.CreateJob(job);
-        return "Job added successfully";
+        return new ResponseEntity<>("job added successfully",HttpStatus.CREATED);
     }
     @GetMapping("/jobs/{id}")
-    public Job GetJobById(@PathVariable long id)
+    public ResponseEntity<Job> GetJobById(@PathVariable long id)
     {
         Job job= jobService.GetJobById(id);
         if(job != null)
-            return job;
-        return new Job(1L, "TestJob", "This is a Testjob","2000", "2000", "Loc");
+            return new ResponseEntity<>(job, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @DeleteMapping("/jobs/{id}")
+    public ResponseEntity<String> deleteJob(@PathVariable long id)
+    {
+        boolean deleted = jobService.DeleteJobById(id);
+         if(deleted)
+             return new ResponseEntity<>("Job deleted successfully", HttpStatus.OK);
+         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @PutMapping("/jobs/{id}")
+    public ResponseEntity<String> updateJob(@PathVariable long id,@RequestBody Job updatedjob)
+    {
+        boolean updated = jobService.UpdateJobById(id, updatedjob);
+        if(updated)
+            return new ResponseEntity<>("Job Updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 
 }
