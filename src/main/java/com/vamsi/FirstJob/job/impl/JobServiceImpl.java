@@ -1,61 +1,60 @@
 package com.vamsi.FirstJob.job.impl;
 
 import com.vamsi.FirstJob.job.Job;
+import com.vamsi.FirstJob.job.JobRepository;
 import com.vamsi.FirstJob.job.jobService;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class JobServiceImpl  implements jobService {
+   JobRepository jobRepository;
 
-    private List<Job> jobs= new ArrayList<>();
+    public JobServiceImpl(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
+    //    private List<Job> jobs= new ArrayList<>();
+
+
     private long newId =1;
     @Override
     public List<Job> FindAll() {
-       return jobs;
+       return jobRepository.findAll();
     }
 
     @Override
     public void CreateJob(Job job) {
         job.setId(newId++);
-        jobs.add(job);
+        jobRepository.save(job);
     }
     @Override
     public Job GetJobById(long id) {
-        for(Job job: jobs)
-        {
-            if(job.getId() == id)
-            {
-                return job;
-            }
-        }
-        return null;
+        return jobRepository.findById(id).orElse(null);
     }
 
     @Override
     public boolean DeleteJobById(long id) {
-        Iterator<Job> iterator =jobs.iterator();
-        while(iterator.hasNext())
+        try {
+            jobRepository.deleteById(id);
+            return true;
+        }catch(Exception e)
         {
-            Job job=iterator.next();
-            if(job.getId() == id)
-            {
-                iterator.remove();
-                return true;
-            }
-
+            return false;
         }
-        return false;
     }
 
     @Override
     public boolean UpdateJobById(long id, Job updatedjob) {
-        for(Job job : jobs)
+        Optional<Job> joboptional = jobRepository.findById(id);
         {
-            if(job.getId() ==  id)
+            if(joboptional.isPresent())
             {
+                Job job= joboptional.get(); 
                 job.setTitle(updatedjob.getTitle());
                 job.setDescription(updatedjob.getDescription());
                 job.setMinSalary(updatedjob.getMinSalary());
