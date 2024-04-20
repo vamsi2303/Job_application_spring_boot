@@ -21,7 +21,7 @@ public class JobServiceImpl  implements jobService {
     //    private List<Job> jobs= new ArrayList<>();
 
 
-    private long newId =1;
+
     @Override
     public List<Job> FindAll() {
        return jobRepository.findAll();
@@ -29,7 +29,6 @@ public class JobServiceImpl  implements jobService {
 
     @Override
     public void CreateJob(Job job) {
-        job.setId(newId++);
         jobRepository.save(job);
     }
     @Override
