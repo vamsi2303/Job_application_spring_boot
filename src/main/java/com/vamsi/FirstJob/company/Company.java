@@ -2,6 +2,7 @@ package com.vamsi.FirstJob.company;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vamsi.FirstJob.job.Job;
+import com.vamsi.FirstJob.review.Review;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -21,6 +22,17 @@ public class Company {
     @OneToMany(mappedBy = "company")
     private List<Job> jobs;
 
+
+    @OneToMany(mappedBy = "company")
+    private List<Review> review;
+
+    public List<Review> getReview() {
+        return review;
+    }
+
+    public void setReview(List<Review> review) {
+        this.review = review;
+    }
 
     // This empty constructor for the JPA
     public Company() {
